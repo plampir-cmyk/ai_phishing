@@ -1,0 +1,28 @@
+timestamp,filename,prediction,risk_score,model_probability,cue_count,header_anomaly_count,triggered_cues
+2026-04-01T17:01:13Z,legitimate_case_study.html,Likely legitimate,0.0612,0.0382,1,0,Urgency language detected
+2026-04-01T17:02:13Z,obvious_phishing_quota.html,Likely phishing,0.8783,0.9999,5,0,Urgency language detected; Action-oriented request detected; Threat or punishment language detected; Generic greeting detected; IP-based URL detected
+2026-04-01T17:02:27Z,hard_phishing_polite.html,Suspicious / needs review,0.5537,0.6966,3,0,Urgency language detected; Action-oriented request detected; Generic greeting detected
+2026-04-01T17:02:32Z,hard_legitimate_portal.html,Likely legitimate,0.2101,0.2431,2,0,Action-oriented request detected; Generic greeting detected
+2026-04-01T17:02:47Z,phishing_reply_mismatch.eml,Likely phishing,0.9307,0.9923,6,2,Urgency language detected; Action-oriented request detected; Generic greeting detected; Potential spoofed or suspicious domain detected; Reply-To domain differs from From domain; Return-Path domain differs from From domain
+2026-04-01T17:02:51Z,phishing_example.eml,Likely phishing,0.9999,0.9998,8,3,Urgency language detected; Action-oriented request detected; Threat or punishment language detected; Generic greeting detected; Potential spoofed or suspicious domain detected; From address uses a free email provider; Reply-To domain differs from From domain; Return-Path domain differs from From domain
+2026-04-01T17:03:09Z,legitimate_schedule.docx,Likely legitimate,0.0274,0.0073,1,0,Generic greeting detected
+2026-04-01T17:03:15Z,legitimate_example.eml,Likely legitimate,0.0032,0.0047,0,0,
+2026-04-01T17:03:18Z,legitimate_case_study.html,Likely legitimate,0.0612,0.0382,1,0,Urgency language detected
+2026-04-01T17:03:21Z,hard_phishing_polite.html,Suspicious / needs review,0.5537,0.6966,3,0,Urgency language detected; Action-oriented request detected; Generic greeting detected
+2026-04-01T17:03:24Z,hard_legitimate_portal.html,Likely legitimate,0.2101,0.2431,2,0,Action-oriented request detected; Generic greeting detected
+2026-04-01T17:03:36Z,phishing_payroll.docx,Likely phishing,0.8298,0.9945,4,0,Urgency language detected; Action-oriented request detected; Generic greeting detected; Potential spoofed or suspicious domain detected
+2026-04-01T17:03:40Z,phishing_example.eml,Likely phishing,0.9999,0.9998,8,3,Urgency language detected; Action-oriented request detected; Threat or punishment language detected; Generic greeting detected; Potential spoofed or suspicious domain detected; From address uses a free email provider; Reply-To domain differs from From domain; Return-Path domain differs from From domain
+2026-04-01T17:03:44Z,phishing_1.html,Suspicious / needs review,0.697,0.959,2,0,Action-oriented request detected; Threat or punishment language detected
+2026-04-01T17:03:50Z,phishing_reply_mismatch.eml,Likely phishing,0.9307,0.9923,6,2,Urgency language detected; Action-oriented request detected; Generic greeting detected; Potential spoofed or suspicious domain detected; Reply-To domain differs from From domain; Return-Path domain differs from From domain
+2026-04-01T17:03:52Z,safe_1.html,Likely legitimate,0.0009,0.0013,0,0,
+2026-04-01T17:03:57Z,hard_legitimate_portal.html,Likely legitimate,0.2101,0.2431,2,0,Action-oriented request detected; Generic greeting detected
+2026-05-19T17:36:48Z,safe_1.html,Likely legitimate,0.0009,0.0013,0,0,
+2026-05-19T17:36:54Z,hard_legitimate_portal.html,Likely legitimate,0.2101,0.2431,2,0,Action-oriented request detected; Generic greeting detected
+2026-05-19T17:37:00Z,legitimate_case_study.html,Likely legitimate,0.0612,0.0382,1,0,Urgency language detected
+2026-05-19T17:37:05Z,phishing_1.html,Suspicious / needs review,0.697,0.959,2,0,Action-oriented request detected; Threat or punishment language detected
+2026-05-19T17:37:27Z,phishing_reply_mismatch.eml,Likely phishing,0.9307,0.9923,6,2,Urgency language detected; Action-oriented request detected; Generic greeting detected; Potential spoofed or suspicious domain detected; Reply-To domain differs from From domain; Return-Path domain differs from From domain
+2026-05-19T17:37:41Z,hard_phishing_polite.html,Suspicious / needs review,0.5537,0.6966,3,0,Urgency language detected; Action-oriented request detected; Generic greeting detected
+2026-05-19T17:37:44Z,hard_legitimate_portal.html,Likely legitimate,0.2101,0.2431,2,0,Action-oriented request detected; Generic greeting detected
+2026-05-19T17:37:49Z,hard_phishing_polite.html,Suspicious / needs review,0.5537,0.6966,3,0,Urgency language detected; Action-oriented request detected; Generic greeting detected
+2026-05-19T17:38:03Z,hard_phishing_polite.html,Suspicious / needs review,0.5537,0.6966,3,0,Urgency language detected; Action-oriented request detected; Generic greeting detected
+2026-05-19T17:38:32Z,hard_legitimate_portal.html,Likely legitimate,0.2101,0.2431,2,0,Action-oriented request detected; Generic greeting detected

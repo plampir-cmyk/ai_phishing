@@ -1,0 +1,7 @@
+flask
+scikit-learn
+pandas
+joblib
+python-docx
+beautifulsoup4
+lxml

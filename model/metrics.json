@@ -1,0 +1,31 @@
+{
+  "dataset": "dataset_large.csv",
+  "rows": 2500,
+  "report": {
+    "legitimate": {
+      "precision": 0.9960159362549801,
+      "recall": 1.0,
+      "f1-score": 0.998003992015968,
+      "support": 250.0
+    },
+    "phishing": {
+      "precision": 1.0,
+      "recall": 0.996,
+      "f1-score": 0.9979959919839679,
+      "support": 250.0
+    },
+    "accuracy": 0.998,
+    "macro avg": {
+      "precision": 0.99800796812749,
+      "recall": 0.998,
+      "f1-score": 0.997999991999968,
+      "support": 500.0
+    },
+    "weighted avg": {
+      "precision": 0.99800796812749,
+      "recall": 0.998,
+      "f1-score": 0.9979999919999679,
+      "support": 500.0
+    }
+  }
+}
