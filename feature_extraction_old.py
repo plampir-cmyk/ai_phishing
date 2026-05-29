@@ -41,42 +41,10 @@ EMOTIONAL_PATTERNS = [
     r"\bprotect your information\b", r"\bfor your safety\b", r"\bsecurity alert\b", r"\brisk\b",
     r"\bthreat\b", r"\bfraud\b", r"\bunauthorized\b"
 ]
-
-CREDENTIAL_LURE_PATTERNS = [
-    r"\bsecure link\b", r"\bshared file\b", r"\bvalidation page\b", r"\bre-enter\b", 
-    r"\bidentity check\b", r"\bsign in\b", r"\bfile sharing\b", r"\blogin\b",
-    r"\bsharepoint\b", r"\bonedrive\b", r"\bdropbox\b", r"\bgoogle drive\b",
-    r"\bdocument shared\b", r"\bview document\b", r"\bsecure document\b", r"\bauthenticate\b"
-]
-
 URL_REGEX = re.compile(r"https?://[^\s'\">)]+|www\.[^\s'\">)]+", re.I)
 IP_URL_REGEX = re.compile(r"https?://(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?(?:/|\b)", re.I)
 SUSPICIOUS_DOMAIN_REGEX = re.compile(r"(?:paypa1|micr0soft|secure-|verify-|account-|billing-|auth-update|transaction-review)", re.I)
 
-#added for feature use later
-TOP_TARGET_BRANDS = {
-    "paypal", "microsoft", "apple", "google", "amazon", 
-    "netflix", "facebook"
-}
-LEET_MAP = str.maketrans("@013457!$", "aoieastis")
-
-BENIGN_DICTIONARY_WORDS = {"maple", "ample", "sample", "mac"}
-
-#added for distance calculation for brand spoofing
-def _levenshtein_distance(s1: str, s2: str) -> int:
-    if len(s1) < len(s2): return _levenshtein_distance(s2, s1)
-    if len(s2) == 0: return len(s1)
-    previous_row = range(len(s2) + 1)
-    for i, c1 in enumerate(s1):
-        current_row = [i + 1]
-        for j, c2 in enumerate(s2):
-            insertions = previous_row[j + 1] + 1
-            deletions = current_row[j] + 1
-            substitutions = previous_row[j] + (c1 != c2)
-            current_row.append(min(insertions, deletions, substitutions))
-        previous_row = current_row
-    return previous_row[-1]
-#end
 
 @dataclass
 class ParsedEmail:
@@ -212,25 +180,15 @@ def compute_handcrafted_features(text: str, urls: list[str] | None = None, heade
     headers = headers or ParsedEmail()
     lowered = text.lower()
     words = re.findall(r"\b\w+\b", lowered)
-    
-    
-    word_count = max(len(words), 1) 
     exclamations = text.count("!")
     uppercase_ratio = (sum(1 for c in text if c.isupper()) / max(len(text), 1))
 
     suspicious_domains = 0
     ip_urls = 0
     shorteners = 0
-    
-    #new feature values
-    max_subdomain_depth = 0
-    max_domain_hyphens = 0
-    brand_spoofing_hits = 0
-
     for url in urls:
         parsed = urlparse(url if url.startswith("http") else f"http://{url}")
         host = (parsed.netloc or parsed.path).lower()
-        
         if IP_URL_REGEX.search(url):
             ip_urls += 1
         if SUSPICIOUS_DOMAIN_REGEX.search(host):
@@ -238,51 +196,8 @@ def compute_handcrafted_features(text: str, urls: list[str] | None = None, heade
         if any(short in host for short in ["bit.ly", "tinyurl.com", "t.co", "rb.gy"]):
             shorteners += 1
 
-        #improved domain analysis feature 
-        domain_parts = host.split('.')
-        max_subdomain_depth = max(max_subdomain_depth, len(domain_parts))
-        max_domain_hyphens = max(max_domain_hyphens, host.count('-'))
-
-        #brand spoofing feature
-        for part in domain_parts:
-            if len(part) < 4:
-                continue 
-            
-            normalized_part = part.translate(LEET_MAP)
-            if normalized_part in BENIGN_DICTIONARY_WORDS:
-                continue
-
-            for brand in TOP_TARGET_BRANDS:
-                
-                if normalized_part == brand:
-                    continue 
-                
-                if brand in normalized_part:
-                    brand_spoofing_hits += 1
-                    break
-                
-                dist = _levenshtein_distance(normalized_part, brand)
-                max_allowed_typos = 2 if len(brand) > 6 else 1
-                
-                if 0 < dist <= max_allowed_typos:
-                    brand_spoofing_hits += 1
-                    break
-
     header_anomalies = len(get_header_anomalies(headers))
-    
-    #urgent words ratio feature
-    action_count = _count_matches(lowered, ACTION_PATTERNS)
-    action_density = action_count / word_count
-    
-    #fake threads feature
-    subject_lower = headers.subject.lower()
-    fake_thread_count = subject_lower.count("re:") + subject_lower.count("fwd:") + subject_lower.count("fw:")
-
-    #subtle credential request feature
-    credential_lure_count = float(_count_matches(lowered, CREDENTIAL_LURE_PATTERNS))
-
     return {
-        
         "char_count": float(len(text)),
         "word_count": float(len(words)),
         "url_count": float(len(urls)),
@@ -291,21 +206,13 @@ def compute_handcrafted_features(text: str, urls: list[str] | None = None, heade
         "url_shortener_count": float(shorteners),
         "urgency_count": float(_count_matches(lowered, URGENCY_PATTERNS)),
         "sensitive_count": float(_count_matches(lowered, SENSITIVE_PATTERNS)),
-        "action_count": float(action_count), 
+        "action_count": float(_count_matches(lowered, ACTION_PATTERNS)),
         "threat_count": float(_count_matches(lowered, THREAT_PATTERNS)),
         "generic_greeting_count": float(_count_matches(lowered, GENERIC_GREETING_PATTERNS)),
         "emotional_tone_count": float(_count_matches(lowered, EMOTIONAL_PATTERNS)),
         "exclamation_count": float(exclamations),
         "uppercase_ratio": float(round(uppercase_ratio, 5)),
         "header_anomaly_count": float(header_anomalies),
-        
-        #added feature's return 
-        "max_subdomain_depth": float(max_subdomain_depth),
-        "max_domain_hyphens": float(max_domain_hyphens),
-        "brand_spoofing_hits": float(brand_spoofing_hits),
-        "action_density": float(round(action_density, 5)),
-        "fake_thread_count": float(fake_thread_count),
-        "credential_lure_count": float(credential_lure_count),
     }
 
 
@@ -333,13 +240,11 @@ def phishing_cues(text: str, urls: list[str] | None = None, headers: ParsedEmail
     return cues
 
 
-#corrected from the given code 
+
 def build_numeric_feature_frame(series):
     rows = []
     for text in series:
-        text_str = str(text)
-        found_urls = URL_REGEX.findall(text_str)
-        rows.append(compute_handcrafted_features(text_str, urls=found_urls, headers=None))
+        rows.append(compute_handcrafted_features(str(text), urls=[], headers=None))
     return __import__("pandas").DataFrame(rows)
 
 def log_result(log_path: str, row: dict[str, Any]) -> None:

@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 ROOT = Path(__file__).resolve().parent
-DATA_PATH = ROOT / "data" / "dataset.csv"
+DATA_PATH = ROOT / "data" / "challenge_dataset.csv"
 MODEL_PATH = ROOT / "model" / "phishing_pipeline.joblib"
 
 

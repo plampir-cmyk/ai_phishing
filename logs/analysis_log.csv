@@ -26,3 +26,12 @@ timestamp,filename,prediction,risk_score,model_probability,cue_count,header_anom
 2026-05-19T17:37:49Z,hard_phishing_polite.html,Suspicious / needs review,0.5537,0.6966,3,0,Urgency language detected; Action-oriented request detected; Generic greeting detected
 2026-05-19T17:38:03Z,hard_phishing_polite.html,Suspicious / needs review,0.5537,0.6966,3,0,Urgency language detected; Action-oriented request detected; Generic greeting detected
 2026-05-19T17:38:32Z,hard_legitimate_portal.html,Likely legitimate,0.2101,0.2431,2,0,Action-oriented request detected; Generic greeting detected
+2026-05-28T15:15:23Z,hard_legitimate_portal.html,Suspicious / needs review,0.495,0.6621,2,0,Action-oriented request detected; Generic greeting detected
+2026-05-28T15:15:27Z,hard_legitimate_portal.html,Suspicious / needs review,0.495,0.6621,2,0,Action-oriented request detected; Generic greeting detected
+2026-05-28T15:15:30Z,hard_phishing_polite.html,Suspicious / needs review,0.6356,0.817,3,0,Urgency language detected; Action-oriented request detected; Generic greeting detected
+2026-05-28T15:15:33Z,hard_legitimate_portal.html,Suspicious / needs review,0.495,0.6621,2,0,Action-oriented request detected; Generic greeting detected
+2026-05-28T15:15:45Z,hard_phishing_polite.html,Suspicious / needs review,0.6356,0.817,3,0,Urgency language detected; Action-oriented request detected; Generic greeting detected
+2026-05-28T15:15:53Z,legitimate_case_study.html,Likely legitimate,0.1493,0.1678,1,0,Urgency language detected
+2026-05-28T15:16:27Z,hard_legitimate_portal.html,Likely legitimate,0.2536,0.307,2,0,Action-oriented request detected; Generic greeting detected
+2026-05-28T15:16:38Z,hard_phishing_polite.html,Likely legitimate,0.2748,0.2865,3,0,Urgency language detected; Action-oriented request detected; Generic greeting detected
+2026-05-28T15:17:04Z,legitimate_case_study.html,Likely legitimate,0.0802,0.0662,1,0,Urgency language detected
