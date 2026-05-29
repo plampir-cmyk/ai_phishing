@@ -314,21 +314,34 @@ def phishing_cues(text: str, urls: list[str] | None = None, headers: ParsedEmail
     headers = headers or ParsedEmail()
     cues: list[str] = []
     if _count_matches(text, URGENCY_PATTERNS):
-        cues.append("Urgency language detected")
+        cues.append("High-pressure urgency language detected (e.g., 'Action required', 'ASAP')")
     if _count_matches(text, ACTION_PATTERNS):
-        cues.append("Action-oriented request detected")
+        cues.append("Suspicious call-to-action detected (e.g., 'Click here', 'Verify')")
     if _count_matches(text, SENSITIVE_PATTERNS):
-        cues.append("Sensitive information request detected")
+        cues.append("Requests sensitive data like passwords or credit cards")
     if _count_matches(text, THREAT_PATTERNS):
-        cues.append("Threat or punishment language detected")
+        cues.append("Threatening language detected (e.g., 'Account suspended')")
     if _count_matches(text, GENERIC_GREETING_PATTERNS):
-        cues.append("Generic greeting detected")
+        cues.append("Uses a generic greeting instead of your actual name")
     if _count_matches(text, EMOTIONAL_PATTERNS):
-        cues.append("Fear or emotional manipulation language detected")
+        cues.append("Uses fear or emotional manipulation (e.g., 'Security alert')")
     if any(IP_URL_REGEX.search(u) for u in urls):
-        cues.append("IP-based URL detected")
+        cues.append("Contains an IP address link instead of a proper domain (major red flag)")
     if any(SUSPICIOUS_DOMAIN_REGEX.search(u) for u in urls):
-        cues.append("Potential spoofed or suspicious domain detected")
+        cues.append("Contains a link to a known spoofed or suspicious domain")
+
+    finance_patterns = [r"\binvoice\b", r"\bpayment\b", r"\bcrypto(currency)?\b", r"\bbitcoin\b", r"\bwire transfer\b", r"\breimbursement\b"]
+    if _count_matches(text, finance_patterns):
+        cues.append("Contains financial lures like invoices, payments, or cryptocurrency")
+
+    impersonation_patterns = [r"\bit department\b", r"\bhuman resources\b", r"\bmanagement\b", r"\bsystem administrator\b", r"\bhelp desk\b"]
+    if _count_matches(text, impersonation_patterns):
+        cues.append("Attempts to impersonate authority figures (e.g., IT, HR, or Management)")
+
+    cloud_patterns = [r"\bshared a document\b", r"\bsecure document\b", r"\bdocuSign\b", r"\bsharepoint\b", r"\bonedrive\b"]
+    if _count_matches(text, cloud_patterns):
+        cues.append("Disguised as a cloud document share or e-signature request")
+
     cues.extend(get_header_anomalies(headers))
     return cues
 
