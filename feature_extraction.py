@@ -313,6 +313,8 @@ def phishing_cues(text: str, urls: list[str] | None = None, headers: ParsedEmail
     urls = urls or []
     headers = headers or ParsedEmail()
     cues: list[str] = []
+    
+    #changed the cue.append('text') to improve explanation messages returned to the user
     if _count_matches(text, URGENCY_PATTERNS):
         cues.append("High-pressure urgency language detected (e.g., 'Action required', 'ASAP')")
     if _count_matches(text, ACTION_PATTERNS):
@@ -330,17 +332,22 @@ def phishing_cues(text: str, urls: list[str] | None = None, headers: ParsedEmail
     if any(SUSPICIOUS_DOMAIN_REGEX.search(u) for u in urls):
         cues.append("Contains a link to a known spoofed or suspicious domain")
 
+    #added dictioneries inside phishing_cues() 
     finance_patterns = [r"\binvoice\b", r"\bpayment\b", r"\bcrypto(currency)?\b", r"\bbitcoin\b", r"\bwire transfer\b", r"\breimbursement\b"]
     if _count_matches(text, finance_patterns):
         cues.append("Contains financial lures like invoices, payments, or cryptocurrency")
 
-    impersonation_patterns = [r"\bit department\b", r"\bhuman resources\b", r"\bmanagement\b", r"\bsystem administrator\b", r"\bhelp desk\b"]
+    impersonation_patterns = [r"\bit department\b", r"\bhuman resources\b", r"\bmanagement\b", r"\bsystem administrator\b", r"\bhelp desk\b", r"\bsecurity team\b", r"\bsecurity desk\b", r"\bit security\b"]
     if _count_matches(text, impersonation_patterns):
         cues.append("Attempts to impersonate authority figures (e.g., IT, HR, or Management)")
 
-    cloud_patterns = [r"\bshared a document\b", r"\bsecure document\b", r"\bdocuSign\b", r"\bsharepoint\b", r"\bonedrive\b"]
+    cloud_patterns = [r"\bshared a document\b", r"\bsecure document\b", r"\bdocuSign\b", r"\bsharepoint\b", r"\bonedrive\b", r"\bshared report\b", r"\bdocument service\b"]
     if _count_matches(text, cloud_patterns):
         cues.append("Disguised as a cloud document share or e-signature request")
+
+    suspension_patterns = [r"\baccount has been suspended\b", r"\bsuspicious activity\b", r"\bunusual activity\b", r"\bmailbox will be locked\b", r"\baccess will be suspended\b"]
+    if _count_matches(text, suspension_patterns):
+        cues.append("Warns about account suspension or unusual activity (common phishing scare tactic)")
 
     cues.extend(get_header_anomalies(headers))
     return cues
