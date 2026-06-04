@@ -32,7 +32,7 @@ def allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def calculate_risk(model_probability: float, cues: list[str], header_anomalies: list[str], feature_map: dict[str, float]) -> float:
+def calculate_risk(model_probability: float, cues: list[str], header_anomalies: list[str], feature_map: dict[str, float]) -> tuple[float, float, float, float]:
     heuristic_score = min(
         1.0,
         (len(cues) * 0.07)
@@ -43,7 +43,19 @@ def calculate_risk(model_probability: float, cues: list[str], header_anomalies: 
         + (feature_map.get("sensitive_count", 0) * 0.05)
         + (feature_map.get("url_shortener_count", 0) * 0.08),
     )
-    return round(min(1.0, 0.68 * float(model_probability) + 0.32 * heuristic_score), 4)
+    
+    # Adaptive Risk Scoring Logic
+    if model_probability >= 0.80 or model_probability <= 0.20:
+        # AI is highly confident: Weight AI heavily
+        ai_weight = 0.80
+        rule_weight = 0.20
+    else:
+        # AI is uncertain: Shift weight to rely on hardcoded heuristic rules
+        ai_weight = 0.30
+        rule_weight = 0.70
+        
+    risk_score = round(min(1.0, ai_weight * float(model_probability) + rule_weight * heuristic_score), 4)
+    return risk_score, ai_weight, rule_weight, round(heuristic_score, 4)
 
 
 def label_from_risk(risk: float) -> str:
@@ -74,6 +86,9 @@ def index():
         "filename": None,
         "risk_percent": None,
         "risk_band": None,
+        "ai_weight": None,
+        "rule_weight": None,
+        "heuristic_score": None,
     }
     if request.method == "POST":
         file = request.files.get("file")
@@ -101,7 +116,7 @@ def index():
         feature_map = compute_handcrafted_features(text, urls, headers)
         cues = phishing_cues(text, urls, headers)
         header_anomalies = get_header_anomalies(headers)
-        risk_score = calculate_risk(model_probability, cues, header_anomalies, feature_map)
+        risk_score, ai_weight, rule_weight, heuristic_score = calculate_risk(model_probability, cues, header_anomalies, feature_map)
         result = label_from_risk(risk_score)
 
         log_result(
@@ -129,6 +144,9 @@ def index():
                 "cues": cues or ["No obvious phishing cues detected"],
                 "header_anomalies": header_anomalies or ["No header anomalies detected"],
                 "features": feature_map,
+                "ai_weight": ai_weight,
+                "rule_weight": rule_weight,
+                "heuristic_score": heuristic_score,
             }
         )
     return render_template("upload.html", **context)

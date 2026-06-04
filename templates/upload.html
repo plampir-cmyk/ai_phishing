@@ -342,9 +342,9 @@
             <div class="hint">Model phishing probability: <strong>{{ model_probability }}</strong><br>Combined risk
               score: <strong>{{ risk_score }}</strong></div>
             <div class="math-breakdown">
-              <strong>[ Explainable AI (XAI) Math Breakdown ]</strong><br>
-              Risk = (0.68 × Model Prob) + (0.32 × Rule Score)<br>
-              Risk = (0.68 × {{ model_probability }}) + (0.32 × Heuristic)<br>
+              <strong>[ Adaptive Explainable AI (XAI) Math Breakdown ]</strong><br>
+              Risk = ({{ ai_weight }} × Model Prob) + ({{ rule_weight }} × Rule Score)<br>
+              Risk = ({{ ai_weight }} × {{ model_probability }}) + ({{ rule_weight }} × {{ heuristic_score }})<br>
               <strong>Final Score: {{ risk_score }}</strong>
             </div>
           </div>
