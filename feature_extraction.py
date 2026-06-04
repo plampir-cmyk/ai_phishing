@@ -341,11 +341,11 @@ def phishing_cues(text: str, urls: list[str] | None = None, headers: ParsedEmail
     if _count_matches(text, impersonation_patterns):
         cues.append("Attempts to impersonate authority figures (e.g., IT, HR, or Management)")
 
-    cloud_patterns = [r"\bshared a document\b", r"\bsecure document\b", r"\bdocuSign\b", r"\bsharepoint\b", r"\bonedrive\b", r"\bshared report\b", r"\bdocument service\b"]
+    cloud_patterns = [r"\bshared a document\b", r"\bsecure document\b", r"\bdocuSign\b", r"\bsharepoint\b", r"\bonedrive\b", r"\bshared report\b", r"\bdocument service\b", r"\bshared file\b", r"\bresearch repository\b"]
     if _count_matches(text, cloud_patterns):
         cues.append("Disguised as a cloud document share or e-signature request")
 
-    suspension_patterns = [r"\baccount has been suspended\b", r"\bsuspicious activity\b", r"\bunusual activity\b", r"\bmailbox will be locked\b", r"\baccess will be suspended\b"]
+    suspension_patterns = [r"\baccount has been suspended\b", r"\bsuspicious activity\b", r"\bunusual activity\b", r"\bmailbox will be locked\b", r"\baccess will be suspended\b", r"\bidentity check\b"]
     if _count_matches(text, suspension_patterns):
         cues.append("Warns about account suspension or unusual activity (common phishing scare tactic)")
 
@@ -353,7 +353,7 @@ def phishing_cues(text: str, urls: list[str] | None = None, headers: ParsedEmail
     return cues
 
 
-#corrected from the given code 
+#bug 1 fix done - corrected from the given code 
 def build_numeric_feature_frame(series):
     rows = []
     for text in series:

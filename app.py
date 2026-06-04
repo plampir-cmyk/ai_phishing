@@ -93,7 +93,11 @@ def index():
         urls = parsed["urls"]
         headers = parsed["headers"]
 
-        model_probability = float(pipeline.predict_proba(pd.DataFrame({"text": [text]}))[0][1])
+        #bug 2 fix to make the model correctly read the links from the URLs 
+        text_for_model = text + "\n" + "\n".join(urls)
+        
+        model_probability = float(pipeline.predict_proba(pd.DataFrame({"text": [text_for_model]}))[0][1])
+       
         feature_map = compute_handcrafted_features(text, urls, headers)
         cues = phishing_cues(text, urls, headers)
         header_anomalies = get_header_anomalies(headers)

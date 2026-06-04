@@ -1,55 +1,299 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AI Phishing Detection Lab</title>
   <style>
-    :root{
-      --bg1:#0f172a; --bg2:#111827; --card:#ffffff; --muted:#64748b; --accent:#2563eb;
-      --accent2:#7c3aed; --good:#059669; --warn:#d97706; --bad:#dc2626; --line:#e5e7eb;
+    :root {
+      --bg1: #0f172a;
+      --bg2: #111827;
+      --card: #ffffff;
+      --muted: #64748b;
+      --accent: #2563eb;
+      --accent2: #7c3aed;
+      --good: #059669;
+      --warn: #d97706;
+      --bad: #dc2626;
+      --line: #e5e7eb;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family:Inter,Segoe UI,Arial,sans-serif; color:#0f172a;
-      background:radial-gradient(circle at top left,#dbeafe 0%,#eef2ff 35%,#f8fafc 100%);
+
+    * {
+      box-sizing: border-box
     }
-    .shell{max-width:1180px;margin:0 auto;padding:32px 20px 48px}
-    .hero{background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#fff;border-radius:24px;padding:28px 28px 22px;box-shadow:0 20px 45px rgba(15,23,42,.22);margin-bottom:24px}
-    .hero h1{margin:0 0 8px;font-size:2rem}
-    .hero p{margin:0;color:#cbd5e1;max-width:820px;line-height:1.55}
-    .toolbar{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;margin-top:20px}
-    .panel,.card{background:var(--card);border:1px solid rgba(255,255,255,.65);border-radius:22px;box-shadow:0 12px 30px rgba(15,23,42,.08)}
-    .panel{padding:22px}
-    .uploadbox{border:2px dashed #93c5fd;border-radius:18px;padding:22px;background:#f8fbff}
-    input[type=file]{width:100%;padding:12px;background:white;border-radius:12px;border:1px solid var(--line)}
-    button{margin-top:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:0;padding:12px 18px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 8px 18px rgba(37,99,235,.25)}
-    .mini-grid,.grid{display:grid;gap:18px}
-    .mini-grid{grid-template-columns:repeat(3,1fr);margin-top:18px}
-    .grid{grid-template-columns:1.1fr .9fr;margin-top:22px}
-    .stat{padding:18px;border-radius:18px;background:linear-gradient(180deg,#fff,#f8fafc);border:1px solid var(--line)}
-    .stat .label{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-    .stat .value{font-size:1.6rem;font-weight:800;margin-top:8px}
-    .pill{display:inline-block;padding:.5rem .8rem;border-radius:999px;background:#eef2ff;margin:.3rem .35rem .15rem 0;font-size:.92rem}
-    .section{padding:22px}
-    h2,h3{margin:0 0 12px}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left}
-    th{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-    .risk-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-    .meter{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) 0deg, var(--accent2) 180deg, #e5e7eb 180deg)}
-    .meter-inner{width:112px;height:112px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;font-weight:800}
-    .band-low{color:var(--good)} .band-medium{color:var(--warn)} .band-high{color:var(--bad)}
-    .hint{font-size:.94rem;color:var(--muted);line-height:1.55}
-    .list-note{font-size:.95rem;color:var(--muted);margin-top:10px}
-    @media (max-width:900px){.toolbar,.grid,.mini-grid{grid-template-columns:1fr}.meter{width:120px;height:120px}.meter-inner{width:90px;height:90px}}
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      color: #0f172a;
+      background: radial-gradient(circle at top left, #dbeafe 0%, #eef2ff 35%, #f8fafc 100%);
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 48px
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: #fff;
+      border-radius: 24px;
+      padding: 28px 28px 22px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, .22);
+      margin-bottom: 24px
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 2rem
+    }
+
+    .hero p {
+      margin: 0;
+      color: #cbd5e1;
+      max-width: 820px;
+      line-height: 1.55
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 18px;
+      margin-top: 20px
+    }
+
+    .panel,
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, .65);
+      border-radius: 22px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, .08)
+    }
+
+    .panel {
+      padding: 22px
+    }
+
+    .uploadbox {
+      border: 2px dashed #93c5fd;
+      border-radius: 18px;
+      padding: 22px;
+      background: #f8fbff
+    }
+
+    input[type=file] {
+      width: 100%;
+      padding: 12px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--line)
+    }
+
+    button {
+      margin-top: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: 0;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, .25)
+    }
+
+    .mini-grid,
+    .grid {
+      display: grid;
+      gap: 18px
+    }
+
+    .mini-grid {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 18px
+    }
+
+    .grid {
+      grid-template-columns: 1.1fr .9fr;
+      margin-top: 22px
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff, #f8fafc);
+      border: 1px solid var(--line)
+    }
+
+    .stat .label {
+      font-size: .82rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em
+    }
+
+    .stat .value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-top: 8px
+    }
+
+    .pill {
+      display: inline-block;
+      padding: .5rem .8rem;
+      border-radius: 999px;
+      background: #eef2ff;
+      margin: .3rem .35rem .15rem 0;
+      font-size: .92rem
+    }
+
+    .section {
+      padding: 22px
+    }
+
+    h2,
+    h3 {
+      margin: 0 0 12px
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    th,
+    td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #eef2f7;
+      text-align: left
+    }
+
+    th {
+      font-size: .82rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    .risk-wrap {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap
+    }
+
+    .meter {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--accent) 0deg, var(--accent2) 180deg, #e5e7eb 180deg)
+    }
+
+    .meter-inner {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-weight: 800
+    }
+
+    .band-low {
+      color: var(--good)
+    }
+
+    .band-medium {
+      color: var(--warn)
+    }
+
+    .band-high {
+      color: var(--bad)
+    }
+
+    .hint {
+      font-size: .94rem;
+      color: var(--muted);
+      line-height: 1.55
+    }
+
+    .list-note {
+      font-size: .95rem;
+      color: var(--muted);
+      margin-top: 10px
+    }
+
+    .alert-banner {
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .alert-high {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #f87171;
+    }
+
+    .alert-medium {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fbbf24;
+    }
+
+    .alert-low {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #4ade80;
+    }
+
+    .math-breakdown {
+      font-family: monospace;
+      background: #f8fafc;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 14px;
+      font-size: 0.85rem;
+      border: 1px dashed #cbd5e1;
+      color: #334155;
+    }
+
+    @media (max-width:900px) {
+
+      .toolbar,
+      .grid,
+      .mini-grid {
+        grid-template-columns: 1fr
+      }
+
+      .meter {
+        width: 120px;
+        height: 120px
+      }
+
+      .meter-inner {
+        width: 90px;
+        height: 90px
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="shell">
     <div class="hero">
       <h1>Master's Lab: AI Phishing Detection</h1>
-      <p>Upload an <strong>.html</strong>, <strong>.docx</strong>, or <strong>.eml</strong> file. The app combines a machine-learning model, phishing heuristics, and email-header checks to produce a risk-oriented classroom analysis.</p>
+      <p>Upload an <strong>.html</strong>, <strong>.docx</strong>, or <strong>.eml</strong> file. The app combines a
+        machine-learning model, phishing heuristics, and email-header checks to produce a risk-oriented classroom
+        analysis.</p>
       <div class="toolbar">
         <div class="panel">
           <h3>Upload a sample</h3>
@@ -59,42 +303,79 @@
               <button type="submit">Analyze file</button>
             </form>
           </div>
-          <p class="list-note">Try the files in <code>sample_inputs/</code> and compare obvious, legitimate, and borderline examples.</p>
+          <p class="list-note">Try the files in <code>sample_inputs/</code> and compare obvious, legitimate, and
+            borderline examples.</p>
         </div>
         <div class="panel">
           <h3>What students should inspect</h3>
-          <div class="hint">1. The final label and risk score.<br>2. Which cues were triggered.<br>3. Whether header anomalies were found.<br>4. Which feature values look unusually high.</div>
+          <div class="hint">1. The final label and risk score.<br>2. Which cues were triggered.<br>3. Whether header
+            anomalies were found.<br>4. Which feature values look unusually high.</div>
         </div>
       </div>
     </div>
 
     {% if result %}
+    <div class="alert-banner alert-{{ risk_band }}">
+      {% if risk_band == 'high' %}
+      🚨 CRITICAL WARNING: This file is highly suspicious. Do not click any links or open attachments. Report to IT
+      Security immediately!
+      {% elif risk_band == 'medium' %}
+      ⚠️ CAUTION: This file exhibits suspicious traits. Verify the sender's identity through a secondary channel before
+      proceeding.
+      {% else %}
+      ✅ SAFE: No obvious phishing indicators were detected by the AI or heuristic rules, but always remain vigilant.
+      {% endif %}
+    </div>
+
     <div class="card section">
       <h2>Analysis result for {{ filename }}</h2>
       <div class="risk-wrap">
-        <div class="meter" style="background:conic-gradient({% if risk_band == 'high' %}var(--bad){% elif risk_band == 'medium' %}var(--warn){% else %}var(--good){% endif %} {{ risk_percent * 3.6 }}deg,#e5e7eb 0deg)">
-          <div class="meter-inner">{{ risk_percent }}%<br><span class="{{ 'band-' + risk_band }}">{{ risk_band|upper }}</span></div>
+        <div class="meter"
+          style="background:conic-gradient({% if risk_band == 'high' %}var(--bad){% elif risk_band == 'medium' %}var(--warn){% else %}var(--good){% endif %} {{ risk_percent * 3.6 }}deg,#e5e7eb 0deg)">
+          <div class="meter-inner">{{ risk_percent }}%<br><span class="{{ 'band-' + risk_band }}">{{ risk_band|upper
+              }}</span></div>
         </div>
         <div>
           <div class="stat" style="min-width:280px">
             <div class="label">Final assessment</div>
             <div class="value">{{ result }}</div>
-            <div class="hint">Model phishing probability: <strong>{{ model_probability }}</strong><br>Combined risk score: <strong>{{ risk_score }}</strong></div>
+            <div class="hint">Model phishing probability: <strong>{{ model_probability }}</strong><br>Combined risk
+              score: <strong>{{ risk_score }}</strong></div>
+            <div class="math-breakdown">
+              <strong>[ Explainable AI (XAI) Math Breakdown ]</strong><br>
+              Risk = (0.68 × Model Prob) + (0.32 × Rule Score)<br>
+              Risk = (0.68 × {{ model_probability }}) + (0.32 × Heuristic)<br>
+              <strong>Final Score: {{ risk_score }}</strong>
+            </div>
           </div>
         </div>
       </div>
       <div class="mini-grid">
-        <div class="stat"><div class="label">Risk band</div><div class="value {{ 'band-' + risk_band }}">{{ risk_band|capitalize }}</div></div>
-        <div class="stat"><div class="label">Triggered cues</div><div class="value">{{ cues|length }}</div></div>
-        <div class="stat"><div class="label">Header anomalies</div><div class="value">{{ header_anomalies|length }}</div></div>
+        <div class="stat">
+          <div class="label">Risk band</div>
+          <div class="value {{ 'band-' + risk_band }}">{{ risk_band|capitalize }}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Triggered cues</div>
+          <div class="value">{{ cues|length }}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Header anomalies</div>
+          <div class="value">{{ header_anomalies|length }}</div>
+        </div>
       </div>
     </div>
 
     <div class="grid">
       <div class="card section">
         <h3>Triggered cues</h3>
-        {% for cue in cues %}<span class="pill">{{ cue }}</span>{% endfor %}
-        <p class="list-note">These cues come from the rule-based layer and help students explain why a sample looks suspicious.</p>
+        {% for cue in cues %}
+        <span class="pill"
+          style="{% if 'IP address' in cue or 'spoofed' in cue or 'Threatening' in cue or 'suspended' in cue %}background:#fee2e2;color:#991b1b;border:1px solid #f87171;{% endif %}">{{
+          cue }}</span>
+        {% endfor %}
+        <p class="list-note">These cues come from the rule-based layer and help students explain why a sample looks
+          suspicious. <strong>Red pills indicate critical severity threats.</strong></p>
       </div>
       <div class="card section">
         <h3>Header anomalies</h3>
@@ -106,15 +387,24 @@
     <div class="card section" style="margin-top:22px">
       <h3>Engineered feature values</h3>
       <table>
-        <thead><tr><th>Feature</th><th>Value</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Value</th>
+          </tr>
+        </thead>
         <tbody>
-        {% for k, v in features.items() %}
-          <tr><td>{{ k }}</td><td>{{ v }}</td></tr>
-        {% endfor %}
+          {% for k, v in features.items() %}
+          <tr>
+            <td>{{ k }}</td>
+            <td>{{ v }}</td>
+          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
     {% endif %}
   </div>
 </body>
+
 </html>
